@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class ChoreListFragment extends Fragment {
     private RecyclerView mChoreRecyclerView;
+    private ChoreAdapter mAdapter;
 
 
     @Override
@@ -22,7 +25,18 @@ public class ChoreListFragment extends Fragment {
         mChoreRecyclerView = view.findViewById(R.id.chore_recycler_view);
         mChoreRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        updateUI();
+
         return view;
+    }
+
+    public void updateUI() {
+        ChoreManager choreManager = ChoreManager.get(getActivity());
+        List<Chore> chores = choreManager.getChores();
+        if(mAdapter == null) {
+            mAdapter = new ChoreAdapter(chores);
+            mChoreRecyclerView.setAdapter(mAdapter);
+        }
     }
 
     private class ChoreHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -37,7 +51,7 @@ public class ChoreListFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        public void Bind(Chore chore) {
+        public void bind(Chore chore) {
             mChore = chore;
             mTitleTextView.setText(mChore.getTitle());
             mDateTextView.setText(mChore.getDueDate());
@@ -50,6 +64,9 @@ public class ChoreListFragment extends Fragment {
     }
 
     private class ChoreAdapter extends RecyclerView.Adapter<ChoreHolder> {
+        private List<Chore> mChores;
+
+        public ChoreAdapter(List<Chore> chores) { mChores = chores; }
         @NonNull
         @Override
         public ChoreHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,12 +76,13 @@ public class ChoreListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ChoreHolder holder, int position) {
-
+            Chore chore = mChores.get(position);
+            holder.bind(chore);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mChores.size();
         }
     }
 }
