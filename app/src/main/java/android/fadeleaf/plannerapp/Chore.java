@@ -17,6 +17,15 @@ public class Chore {
         mID = id;
         mDateCreated = new Date();
     }
+
+    public Chore(String title, Date dateNext, boolean repeat, int priority, int rating) {
+        this(UUID.randomUUID());
+        mTitle = title;
+        mDateNext = dateNext;
+        mRepeat = repeat;
+        mPriority = priority;
+        mRating = rating;
+    }
     public String getTitle() {
         return mTitle;
     }
